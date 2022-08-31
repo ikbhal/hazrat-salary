@@ -1,15 +1,9 @@
 import logo from './logo.svg';
 import './App.css';
+import {useState} from 'react';
+//https://www.npmjs.com/package/reactjs-simple-table
+// import SimpleTableComponent from "reactjs-simple-table";
 import styled from 'styled-components'
-
-const Button = styled.button`
-  background: transparent;
-  border-radius: 3px;
-  border: 2px solid palevioletred;
-  color: palevioletred;
-  margin: 0 1em;
-  padding: 0.25em 1em;
-`
 
 const Ul = styled.ul`
   list-style: none;
@@ -17,24 +11,45 @@ const Ul = styled.ul`
 
 function App() {
   var salary = 15000;
-  var supportingPeople = 10;
+  var [supportingPeople,setSupportingPeople] = useState(10);
   var perPerson = salary/supportingPeople;
   var workingDaysPerMonth = 25;
   var workingDaysPerWeek = 6;
-  var perPersonPerDay = perPerson/workingDaysPerMonth;
-  var perPersonPerWeek = workingDaysPerWeek * perPersonPerDay;
+  var perPersonPerDay = Math.round(perPerson/workingDaysPerMonth);
+  var perPersonPerWeek = Math.round(workingDaysPerWeek * perPersonPerDay);
+  var perPersonPerMonth = Math.round(salary/supportingPeople);
+
+  const columns = [
+    {
+      field: "Duration",
+      headerName: "duration",
+    },
+    {
+      field: "amount",
+      headerName: "Amount",
+    },
+  ];
+
+  var list = [{amount: perPersonPerMonth, 'duration': 'Month'},
+    {amount: perPersonPerWeek, 'duration': 'Week'},
+    {amount: perPersonPerDay, 'duration': 'Day'}];
+
   return (
     <div className="App">
      <h1>Hazrat salary {salary}</h1>
      <p>Number of people supporting hazraat salary {supportingPeople}</p>
+     <input type="range" min="1" max="100" 
+      value={supportingPeople}
+      onChange = {e=> setSupportingPeople(e.target.value)}
+      className="slider" id="myRange"/> <br/>
      <h2>Per Person</h2>
      <Ul>
-      <li>Month {salary/supportingPeople}</li>
+      <li>Month {perPersonPerMonth}</li>
       <li>Week { perPersonPerWeek}</li>
       <li>Day({workingDaysPerMonth} working days) {perPersonPerDay}</li>
      </Ul>
 
-     <Button>Hurray</Button>
+     {/* not working <SimpleTableComponent columns={columns} list={list} /> */}
 
     </div>
   );
